@@ -1,0 +1,3 @@
+timestamp,employee_id,text_input,detected_emotion,emotion_score,suggestion_given
+2025-05-20 17:52:13,123,I am feeling fantastic,positive,0.6249,Great to hear! Consider collaborating with your team or mentoring someone.
+2025-05-20 18:11:01,141,I am feeling sad,negative,-0.3818,"If you're stressed, perhaps switch to a less demanding task for a while."
