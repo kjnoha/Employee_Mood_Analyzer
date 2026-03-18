@@ -1,3 +1,27 @@
-timestamp,employee_id,text_input,detected_emotion,emotion_score,suggestion_given
-2025-05-20 17:52:13,123,I am feeling fantastic,positive,0.6249,Great to hear! Consider collaborating with your team or mentoring someone.
-2025-05-20 18:11:01,141,I am feeling sad,negative,-0.3818,"If you're stressed, perhaps switch to a less demanding task for a while."
+timestamp,employee_id,text_input,detected_emotion,emotion_category,emotion_score,suggestion_given
+2025-05-20 17:52:13,123,I am feeling fantastic,happy,positive,0.6249,Great to hear! Consider collaborating with your team or mentoring someone.
+2025-05-20 18:11:01,141,I am feeling sad,sad,negative,-0.3818,"If you're stressed, perhaps switch to a less demanding task for a while."
+2025-05-23 18:12:50,123,I am feeling happy,happy,positive,0.6369,Great to hear! Consider collaborating with your team or mentoring someone.
+2025-07-16 14:27:25,123,i am feeling happy,happy,positive,0.6369,Excellent! Channel this positive energy into a creative or challenging task.
+2026-03-10 09:15:00,EMP-042,The sprint deadline is stressing me out,stressed,negative,-0.4215,Break your current task into smaller more manageable pieces.
+2026-03-10 11:30:00,EMP-042,Had a great standup meeting today,happy,positive,0.6696,Channel this positive energy into a creative or challenging task.
+2026-03-10 14:45:00,EMP-101,I feel burnt out from all the overtime,tired,negative,-0.5423,Listen to your body. If possible take a 15-minute power nap or rest.
+2026-03-11 08:00:00,EMP-042,Excited to start the new feature,motivated,positive,0.6249,Strike while the iron is hot — tackle your highest-priority task now!
+2026-03-11 10:30:00,EMP-101,Feeling much better after a good night sleep,calm,neutral,0.2263,A balanced state — perfect for focused detail-oriented work.
+2026-03-11 13:00:00,123,I nailed the code review today,confident,positive,0.5106,Feeling strong! Present your ideas in a meeting or pitch to leadership.
+2026-03-11 14:00:00,EMP-101,Frustrated with this merge conflict,frustrated,negative,-0.3412,Step away from the problem for 10 minutes — fresh eyes often find the solution.
+2026-03-11 15:30:00,141,Nervous about tomorrow presentation,anxious,negative,-0.296,Focus on what you CAN control. Make a list of your next 3 small actions.
+2026-03-11 16:29:04,12,Im feeling very low,stressed,negative,-0.2247,"Take a 5-minute breather. Step away, stretch, or do some deep breathing."
+2026-03-11 16:29:30,12,Im very happy?,happy,positive,0.6115,Use this momentum for code reviews or architectural decisions.
+2026-03-11 16:30:10,12,does all the work has been in in every day?,calm,neutral,0.0,"Consider catching up on emails, Slack messages, or admin work."
+2026-03-11 16:31:08,12,how long it will it takes in a day for you bro,calm,neutral,0.0,"Consider catching up on emails, Slack messages, or admin work."
+2026-03-11 16:31:14,12,how long it will it takes in a day for you bro shut up,calm,neutral,0.0,"Good time for planning, organizing your backlog, or writing documentation."
+2026-03-11 16:31:33,12,shut up and get out of my house,calm,neutral,0.0,"Consider catching up on emails, Slack messages, or admin work."
+2026-03-11 16:32:02,1,shut and get lost,stressed,negative,-0.3182,Write down everything on your plate — just listing it out can reduce overwhelm.
+2026-03-11 16:40:37,EMP-200,I am feeling really stressed about the upcoming deadline,stressed,negative,-0.2944,"Break your current task into smaller, more manageable pieces."
+2026-03-11 17:28:06,13,please be gentle or mind it,happy,positive,0.6369,You're in a great mood! Tackle that challenging feature or creative task you've been putting off.
+2026-03-11 17:28:15,13,please be gentle or mind it,happy,positive,0.6369,Perfect time to mentor a colleague or lead a team discussion.
+2026-03-14 15:16:26,1,hi im bad,stressed,negative,-0.5423,"Take a 5-minute breather. Step away, stretch, or do some deep breathing."
+2026-03-16 12:38:38,112,im bit sad,sad,negative,-0.4767,Consider reaching out to your team lead or HR if you need support.
+2026-03-16 12:40:24,112,im nervous,anxious,negative,-0.2732,"Ground yourself: name 5 things you can see, 4 you can touch, 3 you hear."
+2026-03-17 10:47:49,cs11,im feeling anxious,anxious,negative,-0.128,Talk to your manager or a trusted colleague about what's worrying you.

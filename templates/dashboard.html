@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Employee Emotion Analyzer — AI-powered emotion analysis and workplace wellness dashboard.">
+    <title>Employee Emotion Analyzer — Workplace Wellness Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <!-- Particle background canvas -->
+    <canvas id="particle-canvas" data-mood="{{ team_mood_category }}"></canvas>
+
+    <div class="app-container">
+
+        <!-- ═══════════════════ HEADER ═══════════════════ -->
+        <header class="app-header">
+            <div class="logo-group">
+                <div class="logo-icon">⚡</div>
+                <div>
+                    <h1>Employee Emotion Analyzer</h1>
+                    <div class="subtitle">AI-powered workplace wellness intelligence</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <div class="streak-badge" title="Positive Mood Streak">
+                    {{ streak_info.emoji }} <span>{{ streak_info.message }}</span>
+                </div>
+                <span class="pulse-dot" title="System Active"></span>
+            </div>
+        </header>
+
+
+        <!-- ═══════════════════ STAT CARDS ═══════════════════ -->
+        <section class="stats-row">
+            <div class="glass-card stat-card" style="--_accent: var(--accent-primary);">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value">{{ team_stats.active_members }}</div>
+                <div class="stat-label">Active Members</div>
+            </div>
+            <div class="glass-card stat-card" style="--_accent: var(--emerald);">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">{{ team_stats.total_entries }}</div>
+                <div class="stat-label">Total Entries</div>
+            </div>
+            <div class="glass-card stat-card" style="--_accent: var(--cyan);">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">{{ team_stats.avg_score }}</div>
+                <div class="stat-label">Avg Mood Score</div>
+            </div>
+
+            <!-- Productivity Gauge Card -->
+            <div class="glass-card stat-card prod-gauge-card" style="--_accent: {{ prod_grade.color }};">
+                <div class="stat-icon">🧠</div>
+                <div class="prod-gauge-wrap">
+                    <svg class="prod-gauge" viewBox="0 0 120 120" width="80" height="80">
+                        <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="10" />
+                        <circle cx="60" cy="60" r="52" fill="none" stroke="{{ prod_grade.color }}" stroke-width="10"
+                            stroke-dasharray="{{ (prod_score / 100) * 327 }} 327" stroke-linecap="round"
+                            transform="rotate(-90 60 60)" class="gauge-fill" />
+                        <text x="60" y="56" text-anchor="middle" fill="{{ prod_grade.color }}" font-size="22"
+                            font-weight="800" font-family="Inter">{{ prod_score }}</text>
+                        <text x="60" y="72" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="500"
+                            font-family="Inter">{{ prod_grade.grade }}</text>
+                    </svg>
+                </div>
+                <div class="stat-label">Productivity Score</div>
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════ MOOD ANALYSIS FORM ═══════════════════ -->
+        <section class="glass-card mood-form-card mb-3">
+            <div class="section-title">
+                <span class="icon">🧠</span> Analyze Employee Emotion
+            </div>
+
+            <form id="mood-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="employee_id">Employee ID</label>
+                        <input type="text" id="employee_id" name="employee_id" placeholder="e.g. EMP-042" required
+                            autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="text_input">How are you feeling?</label>
+                        <input type="text" id="text_input" name="text_input"
+                            placeholder="I'm feeling a bit overwhelmed with the sprint deadline…" required
+                            autocomplete="off">
+                    </div>
+                    <div class="form-group" style="display:flex; gap:10px; align-items:flex-end;">
+                        <button type="submit" class="btn btn-primary" id="analyze-btn">
+                            <span class="spinner" id="spinner"></span>
+                            Analyze
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- ── Result Panel ── -->
+            <div class="result-panel" id="result-panel">
+
+                <!-- Top: Emotion + Score + Productivity Gauge -->
+                <div class="result-top-grid">
+                    <div class="result-header">
+                        <div class="result-emoji" id="res-emoji"></div>
+                        <div>
+                            <div class="result-emotion" id="res-emotion"></div>
+                            <span class="result-category" id="res-category"></span>
+                            <span class="text-sm text-muted" style="margin-left:10px;">
+                                Score: <strong id="res-score"></strong>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="result-prod-gauge" id="result-prod-gauge"></div>
+                </div>
+
+                <!-- Streak badge -->
+                <div class="result-streak" id="result-streak"></div>
+
+                <!-- Sentiment breakdown bars -->
+                <div class="sentiment-bars">
+                    <div class="sentiment-bar-group">
+                        <div class="bar-label">Positive</div>
+                        <div class="sentiment-bar-track">
+                            <div class="sentiment-bar-fill pos" style="width:0%"></div>
+                        </div>
+                        <div class="sentiment-bar-value pos">0%</div>
+                    </div>
+                    <div class="sentiment-bar-group">
+                        <div class="bar-label">Negative</div>
+                        <div class="sentiment-bar-track">
+                            <div class="sentiment-bar-fill neg" style="width:0%"></div>
+                        </div>
+                        <div class="sentiment-bar-value neg">0%</div>
+                    </div>
+                    <div class="sentiment-bar-group">
+                        <div class="bar-label">Neutral</div>
+                        <div class="sentiment-bar-track">
+                            <div class="sentiment-bar-fill neu" style="width:0%"></div>
+                        </div>
+                        <div class="sentiment-bar-value neu">0%</div>
+                    </div>
+                </div>
+
+                <!-- Task Priority -->
+                <div class="task-priority-card">
+                    <h4>📋 Task Priority Recommendation</h4>
+                    <div class="priority-grid">
+                        <div class="priority-item">
+                            <div class="p-label">Priority Level</div>
+                            <div class="p-value" id="tp-priority">—</div>
+                        </div>
+                        <div class="priority-item">
+                            <div class="p-label">Focus Area</div>
+                            <div class="p-value" id="tp-focus">—</div>
+                        </div>
+                        <div class="priority-item">
+                            <div class="p-label">Time Blocks</div>
+                            <div class="p-value" id="tp-time">—</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two columns: Suggestions + Music -->
+                <div class="result-bottom-grid">
+                    <!-- Suggestions -->
+                    <div class="suggestion-card">
+                        <h4>💡 Personalized Suggestions</h4>
+                        <ul id="suggestions-list"></ul>
+                    </div>
+
+                    <!-- Music Recommendations -->
+                    <div class="music-card" id="music-card">
+                        <h4>🎧 Mood Playlist</h4>
+                        <div class="music-genre" id="music-genre"></div>
+                        <div class="music-vibe" id="music-vibe"></div>
+                        <ul class="music-tracks" id="music-tracks"></ul>
+                        <div class="music-activity" id="music-activity"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════ CHARTS ═══════════════════ -->
+        <section class="charts-grid">
+            <div class="glass-card">
+                <div class="section-title">
+                    <span class="icon">📈</span> Mood Trend (Last 30 Days)
+                </div>
+                <div class="filter-bar">
+                    <select id="chart-filter-emp">
+                        <option value="">All Employees</option>
+                        {% for emp_id in employee_ids %}
+                        <option value="{{ emp_id }}">{{ emp_id }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="chart-container" id="trend-chart"></div>
+            </div>
+
+            <div class="glass-card">
+                <div class="section-title">
+                    <span class="icon">🍩</span> Emotion Distribution
+                </div>
+                <div class="chart-container" id="distribution-chart"></div>
+            </div>
+        </section>
+
+
+        <!-- ═══════════════════ ACTIVITY FEED ═══════════════════ -->
+        <section class="glass-card activity-feed">
+            <div class="section-title">
+                <span class="icon">📝</span> Recent Activity
+            </div>
+            <div class="feed-list" id="feed-list">
+                {% if recent_entries %}
+                {% for e in recent_entries %}
+                <div class="feed-item">
+                    <div class="feed-icon" style="background: {{ e.color }}15;">{{ e.icon }}</div>
+                    <div class="feed-content">
+                        <div class="feed-text">{{ e.text_input[:60] }}{% if e.text_input|length > 60 %}…{% endif %}
+                        </div>
+                        <div class="feed-meta">
+                            <strong>{{ e.employee_id }}</strong> · {{ e.emotion }} · {{ e.timestamp }}
+                        </div>
+                    </div>
+                    <div class="feed-score" style="color: {{ e.color }};">
+                        {{ '+' if e.score >= 0 else '' }}{{ e.score }}
+                        <div class="score-label">score</div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <p>No mood entries yet. Start by analyzing your first mood above!</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>
